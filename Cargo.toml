@@ -1,0 +1,28 @@
+[package]
+name = "flecks"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+bevy = { version = "0.9", features = ["subpixel_glyph_atlas", "trace_tracy"] }
+rand = "0.8.5"
+iyes_loopless = "0.9.1"
+serde = "1.0"
+bevy_egui = "0.18"
+rug = "1.18"
+lazy_static = "1.4.0"
+dashmap = "5.4.0"
+
+# Enable a small amount of optimization in debug mode
+[profile.dev]
+opt-level = 1
+
+# Enable high optimizations for dependencies (incl. Bevy), but not for our code:
+[profile.dev.package."*"]
+opt-level = 3
+
+[target.x86_64-pc-windows-msvc]
+linker = "rust-lld.exe"
+rustflags = ["-Zshare-generics=n"]
