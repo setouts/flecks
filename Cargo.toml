@@ -11,7 +11,7 @@ rand = "0.8.5"
 iyes_loopless = "0.9.1"
 serde = "1.0"
 bevy_egui = "0.18"
-rug = "1.18"
+#rug = "1.18"
 lazy_static = "1.4.0"
 dashmap = "5.4.0"
 

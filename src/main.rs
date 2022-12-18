@@ -74,6 +74,7 @@ use std::sync::Arc;
 
 use bevy::{
     asset::FileAssetIo,
+    log::LogPlugin,
     prelude::*,
     sprite::{MaterialMesh2dBundle, Mesh2dHandle},
 };
@@ -87,21 +88,19 @@ struct ParticleMetadetaComponent {
 #[derive(Component, Default, Clone)]
 pub struct StoneParticleComponent {}
 
-#[derive(Bundle, Clone, Default)]
-pub struct ParticleBundle {
-    pub meshBundle: MaterialMesh2dBundle,
-    pub metadata: ParticleMetadetaComponent,
-}
+// #[derive(Bundle, Clone, Default)]
+// pub struct ParticleBundle {
+//     pub meshBundle: MaterialMesh2dBundle,
+// }
 
-
-lazy_static! {
-    static ref MESH_CACHE: Arc<Dashmap>> = Arc::
-}
+// lazy_static! {
+//     //static ref MESH_CACHE: Arc<Dashmap<M>> = Arc::
+// }
 
 fn main() {
     App::new()
         .insert_resource(AssetServer::new(FileAssetIo::new("assets", true)))
-        .add_plugins(DefaultPlugins)
+        .add_plugins(DefaultPlugins.set(LogPlugin::default()))
         .add_plugin(EguiPlugin)
         .add_system(ui)
         .add_startup_system(setup)
@@ -141,18 +140,33 @@ fn setup(
 
     //particle
 
-    (0..10000).for_each(|f| {
-        commands.spawn(ParticleBundle {
+    let meshymesh = meshes.add(shape::RegularPolygon::new(1., 4).into());
+    debug!("Hello!");
 
-         })
-    })
+    let mat = materials.add(ColorMaterial::from(Color::rgb(0.5, 0.5, 0.5)));
 
-    commands.spawn(ParticleBundle { ..default() });
+    //TODO: I should construct one giant mesh, instead of having a single mesh for every particle.
+    // But just use sprites for now
 
-    commands.spawn(MaterialMesh2dBundle {
-        mesh: meshes.add(shape::RegularPolygon::new(1., 4).into()).into(),
-        material: materials.add(ColorMaterial::from(Color::BLUE)),
-        transform: Transform::from_translation(Vec3::new(0., 0., 0.)),
-        ..default()
-    });
+    for i in 0..100000 {
+        commands.spawn(SpriteBundle {
+            sprite: Sprite {
+                color: Color::rgb(1., 0., 0.),
+                custom_size: Some(Vec2::new(i as f32 % 500., i as f32 / 5000.)),
+                ..default()
+            },
+            ..default()
+        });
+    }
+
+    error!("determined");
+
+    // commands.spawn(ParticleBundle { ..default() });
+
+    // commands.spawn(MaterialMesh2dBundle {
+    //     mesh: meshymesh.into(),
+    //     material: mat.into(),
+    //     transform: Transform::from_translation(Vec3::new(0., 0., 0.)),
+    //     ..default()
+    // });
 }
